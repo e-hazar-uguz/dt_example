@@ -1,0 +1,124 @@
+<div class="container card mt-5">
+  <div class="container-fluid mt-2">
+
+    <div class="d-flex justify-content-between">
+      <h1 style="font-size: 22px; line-height:44px; font-weight: inherit; font-weight: bold;">{{title}}</h1>
+      <button (click)="saveAllData()" type="button" class="btn mt-2" data-bs-toggle="modal"
+        data-bs-target="#exampleModal2"
+        style="border-radius: 100px;background-color: lightgray;box-shadow: 5px 5px 10px grey; height: 2.4rem; width: 10rem;font-weight: bolder;" [disabled]="tempSavedData.length < 1">
+        Toplu Kaydet
+      </button>
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <div *ngIf="dataLoaded==false" class="spinner-grow" style="width: 4rem; height: 4rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="mt-2 mb-2" style="padding: 1rem;">
+    <table class="table table-bordered table-hover table-striped" datatable [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger">
+      <thead>
+        <tr>
+
+          <th scope="col">İl Adı</th>
+          <th scope="col">İlçe ID</th>
+          <th scope="col">İlçe Adı</th>
+          <th scope="col" style="text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of districtData">
+          <td>{{getCityName(data.il_id)}}</td>
+          <td>{{data.id}}</td>
+          <td>{{data.name}}</td>
+          <td style="text-align: center; width: 10rem;">
+            <button (click)="updateData(data)" type="button" class="btn mx-2 bi bi-pencil-fill" data-bs-toggle="modal"
+              data-bs-target="#exampleModal" style="color: #0d6efd;font-size: 1rem">
+
+            </button>
+            <button (click)="deleteData(data)" type="button" class="btn  bi bi-trash-fill"
+              style="color: #dc3545;font-size: 1rem;">
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bolder;">Şehir Detayı</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formValue">
+
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-md-12 mb-2 mt-2">
+                <label for="il_id"><strong>İl Adı</strong></label>
+                <ng-select formControlName="il_id" [searchable]="true" placeholder="Bir şehir seçiniz!">
+                  <ng-option *ngFor="let city of citiesData" [value]="city.id">{{city.name}}-{{city.id}}</ng-option>
+                </ng-select>
+              </div>
+              <div class="col-md-12 mb-2">
+                <label for="id"><strong>İlçe ID</strong></label>
+                <input type="text" formControlName="id" class="form-control mt-2" id="id">
+              </div>
+              <div class="col-md-12 mb-2">
+                <label for="name"><strong>İlçe Adı</strong></label>
+                <input type="text" formControlName="name" class="form-control mt-2" id="name">
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel" class="btn  btn-danger  me-auto" data-bs-dismiss="modal">İptal</button>
+        <button type="button" (click)="saveChangeDatas(2)" class="btn btn-outline-success">Değişiklikleri
+          kaydet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="font-weight: bolder;">Kaydedilen Dataların Listesi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-success table-bordered table-striped table-hover">
+
+          <thead>
+            <tr style="text-align:center">
+              <th scope="col">İl Adı</th>
+              <th scope="col">İlçe ID</th>
+              <th scope="col">İlçe Adı</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+          <tr *ngFor="let data of tempSavedData;" style="text-align:center">
+            <td>{{data.city_name}}</td>
+            <td>{{data.id}}</td>
+            <td>{{data.name}}</td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel" class="btn  btn-danger  me-auto" data-bs-dismiss="modal">İptal</button>
+      </div>
+    </div>
+  </div>
+</div>
